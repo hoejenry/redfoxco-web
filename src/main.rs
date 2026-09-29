@@ -227,30 +227,25 @@ fn Nav() -> impl IntoView {
 #[component]
 fn Hero() -> impl IntoView {
     view! {
-        <section id="home" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden">
+        <section id="home" class="relative flex items-center overflow-hidden" style="min-height: 42vh">
             <img src=HERO_BG alt="" aria-hidden="true" class="hero-bg" />
             <div class="hero-overlay"></div>
-            <div class="hero-content max-w-2xl px-6 py-16">
-                <span class="text-[0.7rem] font-semibold tracking-[3px] uppercase text-white/50 block mb-6">
-                    "VETERAN-OWNED · NORTHERN VIRGINIA"
-                </span>
-                <h1 class="font-serif font-semibold text-white leading-tight mb-6"
-                    style="font-size: clamp(2rem, 5vw, 3.5rem);">
-                    "Home Improvement With A Veteran's Touch"
-                </h1>
-                <p class="text-white/60 text-base leading-relaxed max-w-lg mx-auto mb-10">
-                    "Dedicated to high-quality home improvement services for the residents of Northern Virginia."
-                </p>
-                <div class="flex flex-col sm:flex-row gap-3 justify-center">
-                    <a href="#gallery"
-                        class="bg-brand-700 hover:bg-brand-800 text-white font-semibold px-8 py-3 rounded-md transition-all hover:-translate-y-0.5 inline-flex items-center justify-center min-h-[44px]">
-                        "View Our Work"
-                    </a>
-                    <a href="#contact"
-                        class="border border-white/40 hover:border-white hover:bg-white/10 text-white font-semibold px-8 py-3 rounded-md transition-all inline-flex items-center justify-center min-h-[44px]">
-                        "Get a Free Quote"
-                    </a>
+            <div class="hero-content w-full max-w-2xl mx-auto px-8 flex flex-col items-center text-center gap-6 py-12">
+                <img src=LOGO alt="Red Fox Co Homes"
+                    class="w-32 h-32 rounded-full object-contain bg-white/10 p-1" />
+                <div>
+                    <span class="text-[0.65rem] font-semibold tracking-[3px] uppercase text-white/50 block mb-3">
+                        "VETERAN-OWNED · NORTHERN VIRGINIA"
+                    </span>
+                    <h1 class="font-serif font-semibold text-white leading-snug mb-6"
+                        style="font-size: clamp(1.5rem, 2.8vw, 2.25rem);">
+                        "Home Improvement With A Veteran's Touch"
+                    </h1>
                 </div>
+                <a href="#gallery"
+                    class="bg-brand-700 hover:bg-brand-800 text-white font-semibold px-7 py-3 rounded-md transition-all hover:-translate-y-0.5 inline-flex items-center justify-center min-h-[44px] text-sm">
+                    "View Our Work"
+                </a>
             </div>
         </section>
     }
