@@ -1,4 +1,4 @@
-FROM rust:1.82 AS builder
+FROM rust:latest AS builder
 RUN rustup target add wasm32-unknown-unknown
 RUN wget -qO- https://github.com/trunk-rs/trunk/releases/download/v0.21.14/trunk-x86_64-unknown-linux-gnu.tar.gz \
     | tar xzC /usr/local/bin trunk
