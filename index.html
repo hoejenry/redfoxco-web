@@ -3,9 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RedFoxCo Homes</title>
+  <title>Red Fox Co Homes — Northern Virginia</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50:  '#fff7ed',
+              100: '#ffedd5',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+            }
+          },
+          fontFamily: {
+            sans: ['system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+            serif: ['Georgia', 'Cambria', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
   <link rel="stylesheet" href="style.css" />
   <link data-trunk rel="rust" data-wasm-opt="z" />
 </head>
-<body></body>
+<body class="bg-white text-gray-800 antialiased"></body>
 </html>

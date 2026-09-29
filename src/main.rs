@@ -98,16 +98,18 @@ const BASEMENTS: &[(&str, &[&str])] = &[
 ];
 
 const CATEGORIES: &[(&str, &str, &[(&str, &[&str])])] = &[
-    ("bathrooms", "Bathrooms", BATHROOMS),
-    ("decks", "Decks & Patios", DECKS),
-    ("office", "Home & Office", OFFICE),
-    ("kitchens", "Kitchens", KITCHENS),
-    ("basements", "Basements", BASEMENTS),
+    ("bathrooms", "Bathrooms",    BATHROOMS),
+    ("decks",     "Decks & Patios", DECKS),
+    ("office",    "Home & Office",  OFFICE),
+    ("kitchens",  "Kitchens",      KITCHENS),
+    ("basements", "Basements",     BASEMENTS),
 ];
 
 fn main() {
     leptos::mount::mount_to_body(App);
 }
+
+// ── App ──────────────────────────────────────────────────────────────────────
 
 #[component]
 fn App() -> impl IntoView {
@@ -133,7 +135,7 @@ fn App() -> impl IntoView {
     }
 }
 
-// ── NAV ─────────────────────────────────────────────────────────────────────
+// ── Nav ──────────────────────────────────────────────────────────────────────
 
 #[component]
 fn Nav() -> impl IntoView {
@@ -141,75 +143,77 @@ fn Nav() -> impl IntoView {
     let (gallery_open, set_gallery_open) = signal(false);
 
     view! {
-        <nav class="nav">
-            <a href="#home" class="nav-brand-link"
+        <nav class="fixed top-0 inset-x-0 z-50 h-16 bg-gray-950 flex items-center justify-between px-6">
+            <a href="#home" class="flex items-center gap-3 min-h-[44px]"
                 on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>
-                <img src=LOGO alt="Red Fox Co Homes logo" class="nav-logo" />
-                <span class="nav-brand">"Red Fox Co Homes"</span>
+                <img src=LOGO alt="Red Fox Co Homes" class="w-9 h-9 rounded-full object-contain bg-white p-0.5" />
+                <span class="text-white font-semibold text-sm">"Red Fox Co Homes"</span>
             </a>
 
-            <ul class="nav-links">
-                <li><a href="#home" class="nav-link">"Home"</a></li>
-                <li><a href="#services" class="nav-link">"Services"</a></li>
-                <li class="nav-dropdown">
-                    <span class="nav-link nav-dropdown-toggle">"Gallery ▾"</span>
-                    <ul class="nav-dropdown-menu">
-                        <li><a href="#gallery" class="nav-dropdown-item">"Bathrooms"</a></li>
-                        <li><a href="#gallery" class="nav-dropdown-item">"Decks & Patios"</a></li>
-                        <li><a href="#gallery" class="nav-dropdown-item">"Home & Office"</a></li>
-                        <li><a href="#gallery" class="nav-dropdown-item">"Kitchens"</a></li>
-                        <li><a href="#gallery" class="nav-dropdown-item">"Basements"</a></li>
+            // Desktop links
+            <ul class="hidden md:flex items-center gap-8 list-none">
+                <li><a href="#home"     class="text-gray-400 hover:text-white text-sm transition-colors min-h-[44px] inline-flex items-center">"Home"</a></li>
+                <li><a href="#services" class="text-gray-400 hover:text-white text-sm transition-colors min-h-[44px] inline-flex items-center">"Services"</a></li>
+                <li class="nav-dropdown relative">
+                    <span class="text-gray-400 hover:text-white text-sm transition-colors min-h-[44px] inline-flex items-center cursor-pointer">"Gallery ▾"</span>
+                    <ul class="dropdown-menu hidden absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-gray-900 rounded-lg min-w-[160px] py-1 shadow-xl z-50 list-none">
+                        <li><a href="#gallery" class="block px-4 py-3 text-gray-400 hover:text-white text-sm transition-colors min-h-[44px] flex items-center">"Bathrooms"</a></li>
+                        <li><a href="#gallery" class="block px-4 py-3 text-gray-400 hover:text-white text-sm transition-colors min-h-[44px] flex items-center">"Decks & Patios"</a></li>
+                        <li><a href="#gallery" class="block px-4 py-3 text-gray-400 hover:text-white text-sm transition-colors min-h-[44px] flex items-center">"Home & Office"</a></li>
+                        <li><a href="#gallery" class="block px-4 py-3 text-gray-400 hover:text-white text-sm transition-colors min-h-[44px] flex items-center">"Kitchens"</a></li>
+                        <li><a href="#gallery" class="block px-4 py-3 text-gray-400 hover:text-white text-sm transition-colors min-h-[44px] flex items-center">"Basements"</a></li>
                     </ul>
                 </li>
-                <li><a href="#contact" class="nav-cta">"Get a Quote"</a></li>
+                <li>
+                    <a href="#contact" class="bg-brand-700 hover:bg-brand-800 text-white text-sm font-semibold px-4 py-2 rounded-full transition-colors min-h-[44px] inline-flex items-center">
+                        "Get a Quote"
+                    </a>
+                </li>
             </ul>
 
-            <button class="hamburger" aria-label="Toggle navigation"
-                on:click=move |_| set_menu_open.update(|v| *v = !*v)>
+            // Hamburger
+            <button
+                class="md:hidden flex items-center justify-center w-11 h-11 text-white hover:bg-white/10 rounded transition-colors"
+                on:click=move |_| set_menu_open.update(|v| *v = !*v)
+                aria-label="Toggle menu">
                 {move || if menu_open.get() { "✕" } else { "☰" }}
             </button>
         </nav>
 
+        // Mobile drawer
         {move || menu_open.get().then(|| view! {
-            <div class="mobile-drawer">
-                <a href="#home" class="mobile-nav-link"
+            <div class="mobile-drawer fixed top-16 inset-x-0 z-40 bg-gray-950 border-t border-white/10 flex flex-col">
+                <a href="#home"
+                    class="text-gray-300 hover:text-white px-6 py-4 text-base border-b border-white/5 flex items-center min-h-[44px] transition-colors"
                     on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>
                     "Home"
                 </a>
-                <a href="#services" class="mobile-nav-link"
+                <a href="#services"
+                    class="text-gray-300 hover:text-white px-6 py-4 text-base border-b border-white/5 flex items-center min-h-[44px] transition-colors"
                     on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>
                     "Services"
                 </a>
-                <button class="mobile-gallery-btn"
+                <button
+                    class="text-gray-300 hover:text-white px-6 py-4 text-base border-b border-white/5 flex items-center min-h-[44px] transition-colors w-full text-left"
                     on:click=move |_| set_gallery_open.update(|v| *v = !*v)>
-                    "Gallery "
-                    {move || if gallery_open.get() { "▴" } else { "▾" }}
+                    {move || if gallery_open.get() { "Gallery ▴" } else { "Gallery ▾" }}
                 </button>
                 {move || gallery_open.get().then(|| view! {
-                    <div class="mobile-sub-group">
-                        <a href="#gallery" class="mobile-sub-link"
-                            on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>
-                            "Bathrooms"
-                        </a>
-                        <a href="#gallery" class="mobile-sub-link"
-                            on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>
-                            "Decks & Patios"
-                        </a>
-                        <a href="#gallery" class="mobile-sub-link"
-                            on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>
-                            "Home & Office"
-                        </a>
-                        <a href="#gallery" class="mobile-sub-link"
-                            on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>
-                            "Kitchens"
-                        </a>
-                        <a href="#gallery" class="mobile-sub-link"
-                            on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>
-                            "Basements"
-                        </a>
+                    <div class="flex flex-col bg-black/20">
+                        <a href="#gallery" class="text-gray-400 hover:text-gray-200 px-10 py-3 text-sm flex items-center min-h-[44px] transition-colors"
+                            on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>"Bathrooms"</a>
+                        <a href="#gallery" class="text-gray-400 hover:text-gray-200 px-10 py-3 text-sm flex items-center min-h-[44px] transition-colors"
+                            on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>"Decks & Patios"</a>
+                        <a href="#gallery" class="text-gray-400 hover:text-gray-200 px-10 py-3 text-sm flex items-center min-h-[44px] transition-colors"
+                            on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>"Home & Office"</a>
+                        <a href="#gallery" class="text-gray-400 hover:text-gray-200 px-10 py-3 text-sm flex items-center min-h-[44px] transition-colors"
+                            on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>"Kitchens"</a>
+                        <a href="#gallery" class="text-gray-400 hover:text-gray-200 px-10 py-3 text-sm flex items-center min-h-[44px] transition-colors"
+                            on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>"Basements"</a>
                     </div>
                 })}
-                <a href="#contact" class="mobile-cta-link"
+                <a href="#contact"
+                    class="mx-6 my-4 bg-brand-700 hover:bg-brand-800 text-white text-center py-3 rounded-lg font-semibold transition-colors min-h-[44px] flex items-center justify-center"
                     on:click=move |_| { set_menu_open.set(false); set_gallery_open.set(false); }>
                     "Get a Free Quote"
                 </a>
@@ -218,85 +222,91 @@ fn Nav() -> impl IntoView {
     }
 }
 
-// ── HERO ─────────────────────────────────────────────────────────────────────
+// ── Hero ─────────────────────────────────────────────────────────────────────
 
 #[component]
 fn Hero() -> impl IntoView {
     view! {
-        <section id="home" class="hero">
+        <section id="home" class="relative min-h-screen flex items-center justify-center text-center overflow-hidden">
             <img src=HERO_BG alt="" aria-hidden="true" class="hero-bg" />
-            <div class="hero-overlay" />
-            <div class="hero-content">
-                <p class="eyebrow hero-eyebrow">"VETERAN-OWNED · NORTHERN VIRGINIA"</p>
-                <h1 class="hero-heading">"Home Improvement With A Veteran's Touch"</h1>
-                <p class="hero-sub">
+            <div class="hero-overlay"></div>
+            <div class="hero-content max-w-2xl px-6 py-16">
+                <span class="text-[0.7rem] font-semibold tracking-[3px] uppercase text-white/50 block mb-6">
+                    "VETERAN-OWNED · NORTHERN VIRGINIA"
+                </span>
+                <h1 class="font-serif font-semibold text-white leading-tight mb-6"
+                    style="font-size: clamp(2rem, 5vw, 3.5rem);">
+                    "Home Improvement With A Veteran's Touch"
+                </h1>
+                <p class="text-white/60 text-base leading-relaxed max-w-lg mx-auto mb-10">
                     "Dedicated to high-quality home improvement services for the residents of Northern Virginia."
                 </p>
-                <div class="hero-actions">
-                    <a href="#gallery" class="btn btn-accent">"View Our Work"</a>
-                    <a href="#contact" class="btn btn-outline">"Get a Free Quote"</a>
+                <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                    <a href="#gallery"
+                        class="bg-brand-700 hover:bg-brand-800 text-white font-semibold px-8 py-3 rounded-md transition-all hover:-translate-y-0.5 inline-flex items-center justify-center min-h-[44px]">
+                        "View Our Work"
+                    </a>
+                    <a href="#contact"
+                        class="border border-white/40 hover:border-white hover:bg-white/10 text-white font-semibold px-8 py-3 rounded-md transition-all inline-flex items-center justify-center min-h-[44px]">
+                        "Get a Free Quote"
+                    </a>
                 </div>
             </div>
         </section>
     }
 }
 
-// ── TRUST BAR ────────────────────────────────────────────────────────────────
+// ── TrustBar ─────────────────────────────────────────────────────────────────
 
 #[component]
 fn TrustBar() -> impl IntoView {
     view! {
-        <div class="trust-bar">
-            <div class="trust-item">
-                <span class="trust-icon">"🛡️"</span>
+        <section class="bg-gray-50 py-16">
+            <div class="max-w-4xl mx-auto px-6 flex flex-col sm:flex-row justify-center gap-12 sm:gap-20 text-center">
                 <div>
-                    <strong class="trust-label">"Licensed & Insured"</strong>
-                    <p class="trust-sub">"Your project is fully protected"</p>
+                    <p class="font-semibold text-sm text-gray-900 mb-1">"Licensed & Insured"</p>
+                    <p class="text-gray-500 text-xs">"Serving Northern Virginia since 2020"</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-sm text-gray-900 mb-1">"Veteran-Owned & Operated"</p>
+                    <p class="text-gray-500 text-xs">"Proudly serving those who served"</p>
+                </div>
+                <div>
+                    <p class="font-semibold text-sm text-gray-900 mb-1">"Highly Rated"</p>
+                    <p class="text-gray-500 text-xs">"5-star quality on every project"</p>
                 </div>
             </div>
-            <div class="trust-divider" />
-            <div class="trust-item">
-                <span class="trust-icon">"⭐"</span>
-                <div>
-                    <strong class="trust-label">"Veteran-Owned & Operated"</strong>
-                    <p class="trust-sub">"Discipline and integrity in every job"</p>
-                </div>
-            </div>
-            <div class="trust-divider" />
-            <div class="trust-item">
-                <span class="trust-icon">"📍"</span>
-                <div>
-                    <strong class="trust-label">"Serving Northern Virginia"</strong>
-                    <p class="trust-sub">"Local expertise, community roots"</p>
-                </div>
-            </div>
-        </div>
+        </section>
     }
 }
 
-// ── SERVICES ─────────────────────────────────────────────────────────────────
+// ── Services ─────────────────────────────────────────────────────────────────
 
 #[component]
 fn Services() -> impl IntoView {
-    let cards = [
-        ("🏠", "Interior Renovations", "Kitchens, bathrooms, basements — complete interior transformations built to last."),
-        ("🌿", "Exterior Upgrades", "Custom decks and patios designed for how you live outdoors."),
-        ("🔨", "Custom Additions", "New rooms, media spaces, and built-ins that expand your home's potential."),
-        ("🪨", "Hardscaping", "Fences, retaining walls, and stonework that add function and curb appeal."),
+    let services = [
+        ("🏠", "Interior Renovations",  "Kitchens, bathrooms, basements — we transform your existing spaces into something you'll love coming home to."),
+        ("🌿", "Exterior Upgrades",     "Custom decks, patios, and outdoor living spaces built to last through every season."),
+        ("🔨", "Custom Additions",      "New rooms, media rooms, and built-in storage tailored to your lifestyle and your floor plan."),
+        ("🪨", "Hardscaping",           "Fences, retaining walls, and hardscape features that add structure and curb appeal to your property."),
     ];
 
     view! {
-        <section id="services" class="section section-bg">
-            <div class="container">
-                <p class="eyebrow">"WHAT WE DO"</p>
-                <h2>"Our Services"</h2>
-                <p class="section-sub">"From kitchens to custom decks — quality work, every time."</p>
-                <div class="services-grid">
-                    {cards.into_iter().map(|(icon, title, desc)| view! {
-                        <div class="service-card">
-                            <span class="service-icon">{icon}</span>
-                            <h3>{title}</h3>
-                            <p class="service-desc">{desc}</p>
+        <section id="services" class="py-32 bg-white">
+            <div class="max-w-5xl mx-auto px-6">
+                <div class="text-center">
+                    <span class="text-xs font-semibold tracking-[3px] uppercase text-gray-400 block mb-4">"WHAT WE DO"</span>
+                    <h2 class="font-serif font-semibold text-4xl text-gray-900 mb-4">"Our Services"</h2>
+                    <p class="text-gray-500 text-base max-w-md mx-auto leading-relaxed">
+                        "From kitchens to custom decks — quality craftsmanship, every time."
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-16 gap-y-14 mt-20">
+                    {services.into_iter().map(|(icon, title, desc)| view! {
+                        <div>
+                            <span class="text-2xl mb-4 block">{icon}</span>
+                            <h3 class="font-serif font-semibold text-lg text-gray-900 mb-3">{title}</h3>
+                            <p class="text-gray-500 text-sm leading-relaxed">{desc}</p>
                         </div>
                     }).collect::<Vec<_>>()}
                 </div>
@@ -305,89 +315,114 @@ fn Services() -> impl IntoView {
     }
 }
 
-// ── GALLERY ──────────────────────────────────────────────────────────────────
+// ── Gallery ──────────────────────────────────────────────────────────────────
 
 #[component]
 fn Gallery(lightbox: RwSignal<Option<String>>) -> impl IntoView {
     let active_tab: RwSignal<&'static str> = RwSignal::new("bathrooms");
 
     view! {
-        <section id="gallery" class="section">
-            <div class="container">
-                <p class="eyebrow">"PROJECT GALLERY"</p>
-                <h2>"Our Work"</h2>
-                <p class="section-sub">"Browse completed projects across all categories."</p>
+        <section id="gallery" class="py-32 bg-gray-50">
+            <div class="max-w-6xl mx-auto px-6">
+                <div class="text-center">
+                    <span class="text-xs font-semibold tracking-[3px] uppercase text-gray-400 block mb-4">"PROJECT GALLERY"</span>
+                    <h2 class="font-serif font-semibold text-4xl text-gray-900">"Our Work"</h2>
+                </div>
 
-                <div class="tab-bar">
+                // Tabs
+                <div class="flex flex-wrap gap-2 justify-center mt-10 mb-16">
                     {CATEGORIES.iter().map(|(id, label, _)| {
                         let id = *id;
+                        let label = *label;
                         view! {
                             <button
-                                class=move || if active_tab.get() == id { "tab-btn tab-btn-active" } else { "tab-btn" }
+                                class=move || {
+                                    if active_tab.get() == id {
+                                        "px-5 py-2.5 rounded-full bg-gray-900 text-white text-sm font-semibold min-h-[44px] inline-flex items-center transition-all"
+                                    } else {
+                                        "px-5 py-2.5 rounded-full border border-gray-200 text-gray-500 text-sm font-semibold hover:border-gray-900 hover:text-gray-900 transition-all min-h-[44px] inline-flex items-center bg-white"
+                                    }
+                                }
                                 on:click=move |_| active_tab.set(id)>
-                                {*label}
+                                {label}
                             </button>
                         }
                     }).collect::<Vec<_>>()}
                 </div>
 
+                // Active category projects
                 {move || {
-                    let current = active_tab.get();
-                    CATEGORIES.iter()
-                        .find(|(id, _, _)| *id == current)
-                        .map(|(_, _, projects)| {
-                            projects.iter().map(|(proj_name, images)| {
+                    let tab = active_tab.get();
+                    let projects = CATEGORIES.iter()
+                        .find(|(id, _, _)| *id == tab)
+                        .map(|(_, _, p)| *p)
+                        .unwrap_or(&[]);
+
+                    view! {
+                        <div>
+                            {projects.iter().map(|(project_name, images)| {
                                 let images = *images;
                                 view! {
-                                    <div class="project-block">
-                                        <h3 class="project-heading">{*proj_name}</h3>
-                                        <div class="photo-grid">
+                                    <div class="mb-12">
+                                        <p class="text-[0.7rem] font-semibold tracking-[2.5px] uppercase text-gray-400 mb-6 mt-10">
+                                            {*project_name}
+                                        </p>
+                                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                                             {images.iter().map(|url| {
-                                                let url = url.to_string();
-                                                let url_lb = url.clone();
+                                                let url_str = url.to_string();
+                                                let url_for_click = url_str.clone();
                                                 view! {
-                                                    <button class="photo-cell"
-                                                        aria-label="Open image"
-                                                        on:click=move |_| lightbox.set(Some(url_lb.clone()))>
-                                                        <img src={url.clone()} alt="" class="photo-img" loading="lazy" />
-                                                        <div class="photo-overlay">
-                                                            <span class="photo-zoom">"🔍"</span>
+                                                    <div class="gallery-item relative overflow-hidden rounded-md aspect-[4/3] cursor-pointer"
+                                                        on:click=move |_| lightbox.set(Some(url_for_click.clone()))>
+                                                        <img
+                                                            src=url_str.clone()
+                                                            alt=""
+                                                            loading="lazy"
+                                                            class="gallery-img w-full h-full object-cover"
+                                                        />
+                                                        <div class="gallery-overlay absolute inset-0 flex items-center justify-center">
+                                                            <span class="zoom-icon text-white text-xl opacity-0 scale-90">"🔍"</span>
                                                         </div>
-                                                    </button>
+                                                    </div>
                                                 }
                                             }).collect::<Vec<_>>()}
                                         </div>
                                     </div>
                                 }
-                            }).collect::<Vec<_>>()
-                        })
-                        .unwrap_or_default()
+                            }).collect::<Vec<_>>()}
+                        </div>
+                    }
                 }}
             </div>
         </section>
     }
 }
 
-// ── LIGHTBOX ─────────────────────────────────────────────────────────────────
+// ── Lightbox ─────────────────────────────────────────────────────────────────
 
 #[component]
 fn Lightbox(url: String, lightbox: RwSignal<Option<String>>) -> impl IntoView {
     view! {
-        <div class="lightbox-overlay" on:click=move |_| lightbox.set(None)>
-            <button class="lightbox-close" on:click=move |_| lightbox.set(None) aria-label="Close">
-                "✕"
-            </button>
+        <div
+            class="lb-overlay fixed inset-0 z-[1000] bg-black/95 flex items-center justify-center p-8 cursor-pointer"
+            on:click=move |_| lightbox.set(None)>
             <img
-                src={url}
-                alt="Project photo"
-                class="lightbox-img"
+                src=url
+                alt=""
+                class="lb-img max-h-[90vh] object-contain rounded-md cursor-default"
+                style="max-width: min(90vw, 900px);"
                 on:click=move |e| e.stop_propagation()
             />
+            <button
+                class="fixed top-6 right-6 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border-none text-white flex items-center justify-center transition-colors z-[1001] text-sm cursor-pointer"
+                on:click=move |_| lightbox.set(None)>
+                "✕"
+            </button>
         </div>
     }
 }
 
-// ── CONTACT ──────────────────────────────────────────────────────────────────
+// ── Contact ──────────────────────────────────────────────────────────────────
 
 #[component]
 fn Contact() -> impl IntoView {
@@ -395,82 +430,94 @@ fn Contact() -> impl IntoView {
     let (name, set_name) = signal(String::new());
 
     view! {
-        <section id="contact" class="section section-alt">
-            <div class="container">
-                <div class="contact-wrap">
-                    <p class="eyebrow">"GET IN TOUCH"</p>
-                    <h2>"Start Your Project"</h2>
-                    <p class="section-sub">
-                        "Ready to transform your home? Reach out and we'll get back to you within one business day."
-                    </p>
-                    <a href="mailto:redfoxcohomes@gmail.com" class="btn btn-accent btn-email">
-                        "Email Us Directly"
-                    </a>
-                    <div class="contact-divider">
-                        <span>"— or fill out the form —"</span>
-                    </div>
+        <section id="contact" class="py-32 bg-white">
+            <div class="max-w-lg mx-auto px-6 text-center">
+                <span class="text-xs font-semibold tracking-[3px] uppercase text-gray-400 block mb-4">"GET IN TOUCH"</span>
+                <h2 class="font-serif font-semibold text-4xl text-gray-900 mb-4">"Start Your Project"</h2>
+                <p class="text-gray-500 text-base leading-relaxed mb-10">
+                    "Ready to transform your home? Reach out and we'll get back to you within one business day."
+                </p>
+                <a href="mailto:redfoxcohomes@gmail.com"
+                    class="bg-brand-700 hover:bg-brand-800 text-white font-semibold px-8 py-3 rounded-md transition-all hover:-translate-y-0.5 inline-flex items-center justify-center min-h-[44px] mb-10">
+                    "Email Us Directly"
+                </a>
 
-                    {move || if submitted.get() {
-                        view! {
-                            <div class="success-card">
-                                <p class="success-icon">"✅"</p>
-                                <h3>"Message Received!"</h3>
-                                <p>"Thanks, " {name.get()} ". We'll be in touch within one business day."</p>
-                            </div>
-                        }.into_any()
-                    } else {
-                        view! {
-                            <form class="contact-form"
-                                on:submit=move |ev| {
-                                    ev.prevent_default();
-                                    set_submitted.set(true);
-                                }>
-                                <div class="form-row">
-                                    <div class="form-field">
-                                        <label class="form-label" for="cf-name">"Your Name"</label>
-                                        <input id="cf-name" class="form-input" type="text"
-                                            placeholder="Jane Smith" required
-                                            on:input=move |ev| set_name.set(event_target_value(&ev)) />
-                                    </div>
-                                    <div class="form-field">
-                                        <label class="form-label" for="cf-email">"Email Address"</label>
-                                        <input id="cf-email" class="form-input" type="email"
-                                            placeholder="jane@example.com" required />
-                                    </div>
-                                </div>
-                                <div class="form-field">
-                                    <label class="form-label" for="cf-msg">"Tell Us About Your Project"</label>
-                                    <textarea id="cf-msg" class="form-input form-textarea"
-                                        rows="4" placeholder="Describe what you'd like done..." required>
-                                    </textarea>
-                                </div>
-                                <button type="submit" class="btn btn-accent btn-submit">"Send Message"</button>
-                            </form>
-                        }.into_any()
-                    }}
+                // Divider
+                <div class="flex items-center gap-4 mb-10 text-gray-300 text-xs">
+                    <span class="flex-1 h-px bg-gray-100"></span>
+                    "or"
+                    <span class="flex-1 h-px bg-gray-100"></span>
                 </div>
+
+                {move || if submitted.get() {
+                    view! {
+                        <div class="text-center py-20">
+                            <span class="text-3xl mb-4 block">"✅"</span>
+                            <h3 class="font-serif font-semibold text-2xl text-gray-900 mb-3">
+                                "Thanks, " {name.get()} "!"
+                            </h3>
+                            <p class="text-gray-500 text-sm">"We'll be in touch within one business day."</p>
+                        </div>
+                    }.into_any()
+                } else {
+                    view! {
+                        <form class="text-left" on:submit=move |e| { e.prevent_default(); set_submitted.set(true); }>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="text-xs font-semibold text-gray-500">"Name"</label>
+                                    <input
+                                        type="text"
+                                        required
+                                        placeholder="Your name"
+                                        class="border border-gray-200 rounded-md px-4 py-3 text-sm text-gray-900 bg-white focus:outline-none focus:border-gray-900 transition-colors w-full min-h-[44px]"
+                                        on:input=move |e| set_name.set(event_target_value(&e))
+                                    />
+                                </div>
+                                <div class="flex flex-col gap-1.5">
+                                    <label class="text-xs font-semibold text-gray-500">"Email"</label>
+                                    <input
+                                        type="email"
+                                        required
+                                        placeholder="your@email.com"
+                                        class="border border-gray-200 rounded-md px-4 py-3 text-sm text-gray-900 bg-white focus:outline-none focus:border-gray-900 transition-colors w-full min-h-[44px]"
+                                    />
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-1.5 mb-4">
+                                <label class="text-xs font-semibold text-gray-500">"Message"</label>
+                                <textarea
+                                    rows="4"
+                                    required
+                                    placeholder="Tell us about your project..."
+                                    class="border border-gray-200 rounded-md px-4 py-3 text-sm text-gray-900 bg-white focus:outline-none focus:border-gray-900 transition-colors w-full resize-none"
+                                ></textarea>
+                            </div>
+                            <button
+                                type="submit"
+                                class="w-full bg-brand-700 hover:bg-brand-800 text-white font-semibold py-3 rounded-md transition-colors min-h-[44px] mt-2">
+                                "Send Message"
+                            </button>
+                        </form>
+                    }.into_any()
+                }}
             </div>
         </section>
     }
 }
 
-// ── FOOTER ───────────────────────────────────────────────────────────────────
+// ── Footer ───────────────────────────────────────────────────────────────────
 
 #[component]
 fn Footer() -> impl IntoView {
     view! {
-        <footer class="footer">
-            <div class="container footer-inner">
-                <div class="footer-brand">
-                    <img src=LOGO alt="Red Fox Co Homes" class="footer-logo" />
-                    <span class="footer-name">"Red Fox Co Homes"</span>
-                </div>
-                <div class="footer-right">
-                    <a href="mailto:redfoxcohomes@gmail.com" class="footer-email">
-                        "redfoxcohomes@gmail.com"
-                    </a>
-                    <p class="footer-copy">"© 2026 Red Fox Co Homes · Northern Virginia"</p>
-                </div>
+        <footer class="border-t border-gray-100 py-10">
+            <div class="max-w-5xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+                <span class="font-semibold text-sm text-gray-900">"Red Fox Co Homes"</span>
+                <span class="text-gray-400 text-xs">"© 2026 Red Fox Co Homes · Northern Virginia"</span>
+                <a href="mailto:redfoxcohomes@gmail.com"
+                    class="text-gray-400 text-xs hover:text-gray-700 transition-colors">
+                    "redfoxcohomes@gmail.com"
+                </a>
             </div>
         </footer>
     }
